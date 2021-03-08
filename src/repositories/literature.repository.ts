@@ -1,7 +1,7 @@
-import {inject, Getter} from '@loopback/core';
-import {DefaultCrudRepository, repository, BelongsToAccessor} from '@loopback/repository';
+import {Getter, inject} from '@loopback/core';
+import {BelongsToAccessor, DefaultCrudRepository, repository} from '@loopback/repository';
 import {CardamineDataSource} from '../datasources';
-import {Literature, LiteratureRelations, DisplayTypes} from '../models';
+import {DisplayTypes, Literature, LiteratureRelations} from '../models';
 import {DisplayTypesRepository} from './display-types.repository';
 
 export class LiteratureRepository extends DefaultCrudRepository<
@@ -10,13 +10,13 @@ export class LiteratureRepository extends DefaultCrudRepository<
   LiteratureRelations
 > {
 
-  public readonly displayType: BelongsToAccessor<DisplayTypes, typeof Literature.prototype.id>;
+  public readonly displayTypeText: BelongsToAccessor<DisplayTypes, typeof Literature.prototype.id>;
 
   constructor(
     @inject('datasources.cardamine') dataSource: CardamineDataSource, @repository.getter('DisplayTypesRepository') protected displayTypesRepositoryGetter: Getter<DisplayTypesRepository>,
   ) {
     super(Literature, dataSource);
-    this.displayType = this.createBelongsToAccessorFor('displayType', displayTypesRepositoryGetter,);
-    this.registerInclusionResolver('displayType', this.displayType.inclusionResolver);
+    this.displayTypeText = this.createBelongsToAccessorFor('displayTypeText', displayTypesRepositoryGetter,);
+    this.registerInclusionResolver('displayTypeText', this.displayTypeText.inclusionResolver);
   }
 }

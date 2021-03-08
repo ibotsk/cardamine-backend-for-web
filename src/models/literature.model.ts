@@ -1,4 +1,4 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
+import {belongsTo, Entity, model, property} from '@loopback/repository';
 import {DisplayTypes} from './display-types.model';
 
 @model({
@@ -66,8 +66,10 @@ export class Literature extends Entity {
   })
   journalName?: string;
 
-  @belongsTo(() => DisplayTypes)
-  displayTypeId: number;
+  @belongsTo(() => DisplayTypes, {name: 'displayTypeText'}, {
+    name: 'display_type',
+  })
+  displayType: number;
 
   constructor(data?: Partial<Literature>) {
     super(data);
