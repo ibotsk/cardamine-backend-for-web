@@ -73,6 +73,7 @@ export class Dna extends Entity {
   @property({
     type: 'number',
     name: 'id_cdata',
+    hidden: true,
   })
   idCdata?: number;
 

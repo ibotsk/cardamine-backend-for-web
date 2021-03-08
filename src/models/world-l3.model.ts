@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {WorldL2} from './world-l2.model';
 
 @model({
   name: 'world_l3',
@@ -15,6 +16,12 @@ export class WorldL3 extends Entity {
     type: 'string',
   })
   description?: string;
+
+  @belongsTo(() => WorldL2, {name: 'worldL2'}, {
+    name: 'id_parent',
+    hidden: true,
+  })
+  idParent: number;
 
   constructor(data?: Partial<WorldL3>) {
     super(data);

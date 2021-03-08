@@ -1,4 +1,5 @@
 import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {ListOfSpecies} from './list-of-species.model';
 import {Literature} from './literature.model';
 
 @model({
@@ -19,12 +20,6 @@ export class Reference extends Entity {
   })
   nameAsPublished?: string;
 
-  @property({
-    type: 'number',
-    name: 'id_standardised_name',
-    hidden: true,
-  })
-  idStandardisedName?: number;
   @property({
     type: 'string',
   })
@@ -48,6 +43,12 @@ export class Reference extends Entity {
     hidden: true,
   })
   idLiterature: number;
+
+  @belongsTo(() => ListOfSpecies, {name: 'originalIdentification'}, {
+    name: 'id_standardised_name',
+    hidden: true,
+  })
+  idStandardisedName: number;
 
   constructor(data?: Partial<Reference>) {
     super(data);

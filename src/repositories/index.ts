@@ -9,3 +9,5 @@ export * from './cdata.repository';
 export * from './dna.repository';
 export * from './material.repository';
 export * from './reference.repository';
+export * from './list-of-species.repository';
+export * from './history.repository';

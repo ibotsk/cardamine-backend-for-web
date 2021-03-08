@@ -1,5 +1,7 @@
-import {Entity, hasOne, model, property} from '@loopback/repository';
+import {belongsTo, Entity, hasOne, model, property} from '@loopback/repository';
+import {Persons} from './persons.model';
 import {Reference} from './reference.model';
+import {WorldL4} from './world-l4.model';
 
 @model({
   name: 'material',
@@ -58,23 +60,10 @@ export class Material extends Entity {
   description?: string;
 
   @property({
-    type: 'number',
-    name: 'collected_by',
-    hidden: true,
-  })
-  collectedById?: number;
-
-  @property({
     type: 'string',
     name: 'collected_date',
   })
   collectedDate?: string;
-
-  @property({
-    type: 'number',
-    name: 'identified_by',
-  })
-  identifiedById?: number;
 
   @property({
     type: 'string',
@@ -99,13 +88,6 @@ export class Material extends Entity {
     name: 'coordinates_lon',
   })
   coordinatesLon?: string;
-
-  @property({
-    type: 'number',
-    name: 'id_world_4',
-    hidden: true,
-  })
-  idWorld4?: number;
 
   @property({
     type: 'string',
@@ -134,6 +116,24 @@ export class Material extends Entity {
 
   @hasOne(() => Reference, {keyTo: 'idMaterial'})
   reference: Reference;
+
+  @belongsTo(() => Persons, {name: 'collectedBy'}, {
+    name: 'collected_by',
+    hidden: true,
+  })
+  collectedById: number;
+
+  @belongsTo(() => Persons, {name: 'identifiedBy'}, {
+    name: 'identified_by',
+    hidden: true,
+  })
+  identifiedById: number;
+
+  @belongsTo(() => WorldL4, {name: 'worldL4'}, {
+    name: 'id_world_4',
+    hidden: true,
+  })
+  idWorld4: number;
 
   constructor(data?: Partial<Material>) {
     super(data);

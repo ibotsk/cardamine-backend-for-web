@@ -136,9 +136,56 @@ export class CdataController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(Cdata, {exclude: 'where'}) filter?: FilterExcludingWhere<Cdata>
+    @param.filter(Cdata, {exclude: ['where', 'include']}) filter?: FilterExcludingWhere<Cdata>
   ): Promise<Cdata> {
-    return this.cdataRepository.findById(id, filter);
+    const fb = new FilterBuilder<Cdata>(filter);
+
+    const filterWIncludes = fb
+      .include('countedBy')
+      .include('dna')
+      .include({
+        relation: 'histories',
+        scope: {
+          include: ['listOfSpecies'],
+          order: ['id DESC'],
+        },
+      })
+      .include({
+        relation: 'material',
+        scope: {
+          include: [
+            'collectedBy',
+            'identifiedBy',
+            {
+              relation: 'reference',
+              scope: {
+                include: ['literature', 'originalIdentification'],
+              },
+            },
+            {
+              relation: 'worldL4',
+              scope: {
+                fields: ['description'],
+                include: [{
+                  relation: 'worldL3',
+                  scope: {
+                    fields: ['description'],
+                    include: [{
+                      relation: 'worldL2',
+                      scope: {
+                        fields: ['description'],
+                        include: ['worldL1'],
+                      },
+                    }],
+                  },
+                }],
+              },
+            },
+          ],
+        },
+      })
+      .build();
+    return this.cdataRepository.findById(id, filterWIncludes);
   }
 
 }

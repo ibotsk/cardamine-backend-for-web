@@ -1,6 +1,8 @@
-import {Entity, hasOne, model, property} from '@loopback/repository';
+import {belongsTo, Entity, hasOne, model, property, hasMany} from '@loopback/repository';
 import {Dna} from './dna.model';
 import {Material} from './material.model';
+import {Persons} from './persons.model';
+import {History} from './history.model';
 
 @model({
   name: 'cdata',
@@ -27,12 +29,6 @@ export class Cdata extends Entity {
     type: 'string',
   })
   x?: string;
-
-  @property({
-    type: 'number',
-    name: 'counted_by',
-  })
-  counteById?: number;
 
   @property({
     type: 'string',
@@ -166,6 +162,15 @@ export class Cdata extends Entity {
 
   @hasOne(() => Material, {keyTo: 'idCdata'})
   material: Material;
+
+  @belongsTo(() => Persons, {name: 'countedBy'}, {
+    name: 'counted_by',
+    hidden: true,
+  })
+  countedById: number;
+
+  @hasMany(() => History, {keyTo: 'idData'})
+  histories: History[];
 
   constructor(data?: Partial<Cdata>) {
     super(data);
