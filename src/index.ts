@@ -1,4 +1,7 @@
+import dotenv from 'dotenv';
 import {ApplicationConfig, CardamineBackendForWebApplication} from './application';
+
+dotenv.config();
 
 export * from './application';
 
