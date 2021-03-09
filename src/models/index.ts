@@ -1,3 +1,4 @@
+export * from './cdata-search.model';
 export * from './cdata.model';
 export * from './display-types.model';
 export * from './dna.model';
@@ -11,4 +12,3 @@ export * from './world-l1.model';
 export * from './world-l2.model';
 export * from './world-l3.model';
 export * from './world-l4.model';
-

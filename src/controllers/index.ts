@@ -3,3 +3,4 @@ export * from './literature.controller';
 export * from './persons.controller';
 export * from './ping.controller';
 export * from './worlds.controller';
+export * from './cdata-search.controller';

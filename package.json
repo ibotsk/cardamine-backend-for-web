@@ -51,6 +51,7 @@
     "@loopback/rest-explorer": "^3.1.0",
     "@loopback/service-proxy": "^3.0.7",
     "dotenv": "^8.2.0",
+    "lodash.groupby": "^4.6.0",
     "loopback-connector-postgresql": "^5.0.1",
     "tslib": "^2.0.0",
     "wkx": "^0.5.0"
@@ -59,6 +60,7 @@
     "@loopback/build": "^6.2.9",
     "@loopback/eslint-config": "^10.0.5",
     "@loopback/testlab": "^3.2.12",
+    "@types/lodash.groupby": "^4.6.6",
     "@types/node": "^10.17.51",
     "eslint": "^7.18.0",
     "source-map-support": "^0.5.19",
