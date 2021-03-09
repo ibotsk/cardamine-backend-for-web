@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {Getter, inject} from '@loopback/core';
 import {BelongsToAccessor, DefaultCrudRepository, HasOneRepositoryFactory, repository} from '@loopback/repository';
 import {CardamineDataSource} from '../datasources';
@@ -23,9 +24,16 @@ export class MaterialRepository extends DefaultCrudRepository<
   constructor(
     @inject('datasources.cardamine') dataSource: CardamineDataSource,
     @repository.getter('ReferenceRepository') protected referenceRepositoryGetter: Getter<ReferenceRepository>,
-    @repository.getter('PersonsRepository') protected personsRepositoryGetter: Getter<PersonsRepository>, @repository.getter('WorldL4Repository') protected worldL4RepositoryGetter: Getter<WorldL4Repository>,
+    @repository.getter('PersonsRepository') protected personsRepositoryGetter: Getter<PersonsRepository>,
+    @repository.getter('WorldL4Repository') protected worldL4RepositoryGetter: Getter<WorldL4Repository>,
   ) {
     super(Material, dataSource);
+
+    (this.modelClass as any).observe('persist', async (ctx: any) => {
+      delete ctx.data.coordinatesGeoref;
+      delete ctx.data.coordinatesForMap;
+    });
+
     this.worldL4 = this.createBelongsToAccessorFor('worldL4', worldL4RepositoryGetter,);
     this.registerInclusionResolver('worldL4', this.worldL4.inclusionResolver);
     this.reference = this.createHasOneRepositoryFactoryFor('reference', referenceRepositoryGetter);

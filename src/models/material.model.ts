@@ -1,7 +1,37 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {belongsTo, Entity, hasOne, model, property} from '@loopback/repository';
+import wkx from 'wkx';
 import {Persons} from './persons.model';
 import {Reference} from './reference.model';
 import {WorldL4} from './world-l4.model';
+
+interface Coordinate {
+  lat: number;
+  lon: number;
+}
+
+interface Coordinates {
+  type: string;
+  coordinates: Coordinate;
+}
+
+const geogHexToJSON = (hexCoord?: string): Coordinates | null => {
+  if (!hexCoord) {
+    return null;
+  }
+  const wkbBuffer = Buffer.from(hexCoord, 'hex');
+  const geom = wkx.Geometry.parse(wkbBuffer);
+
+  const geoJSONObject = geom.toGeoJSON() as any;
+
+  return {
+    type: geoJSONObject.type,
+    coordinates: {
+      lat: geoJSONObject.coordinates[1],
+      lon: geoJSONObject.coordinates[0],
+    },
+  };
+};
 
 @model({
   name: 'material',
@@ -105,14 +135,33 @@ export class Material extends Entity {
   @property({
     type: 'string',
     name: 'coordinates_georef',
+    hidden: true,
   })
-  coordinatesGeoref?: string;
+  coordinatesGeorefRaw?: string;
+
+  @property({
+    type: 'string',
+    name: 'coordinates_for_map',
+    hidden: true,
+  })
+  coordinatesForMapRaw?: string;
+
+  @property({
+    type: 'string',
+    name: 'coordinates_georef',
+  })
+  get coordinatesGeoref(): Coordinates | null {
+    return geogHexToJSON(this.coordinatesGeorefRaw);
+  };
 
   @property({
     type: 'string',
     name: 'coordinates_for_map',
   })
-  coordinatesForMap?: string;
+  // coordinatesForMap?: string;
+  get coordinatesForMap(): Coordinates | null {
+    return geogHexToJSON(this.coordinatesForMapRaw);
+  };
 
   @hasOne(() => Reference, {keyTo: 'idMaterial'})
   reference: Reference;
@@ -136,6 +185,10 @@ export class Material extends Entity {
   idWorld4: number;
 
   constructor(data?: Partial<Material>) {
+    if (data) {
+      delete (data as any).coordinatesGeoref;
+      delete (data as any).coordinatesForMap;
+    }
     super(data);
   }
 }

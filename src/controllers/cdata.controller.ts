@@ -165,15 +165,12 @@ export class CdataController {
             {
               relation: 'worldL4',
               scope: {
-                fields: ['description'],
                 include: [{
                   relation: 'worldL3',
                   scope: {
-                    fields: ['description'],
                     include: [{
                       relation: 'worldL2',
                       scope: {
-                        fields: ['description'],
                         include: ['worldL1'],
                       },
                     }],
