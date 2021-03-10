@@ -1,4 +1,5 @@
 import {belongsTo, Entity, hasMany, model, property} from '@loopback/repository';
+import {Synonyms} from './synonyms.model';
 
 @model({
   name: 'list_of_species',
@@ -197,6 +198,18 @@ export class ListOfSpecies extends Entity {
 
   @hasMany(() => ListOfSpecies, {keyTo: 'idNomenNovum'})
   nomenNovumFor: ListOfSpecies[];
+
+  @hasMany(() => Synonyms, {keyTo: 'idParent'})
+  synonyms: Synonyms[];
+
+  @hasMany(() => ListOfSpecies, {
+    through: {
+      model: () => Synonyms,
+      keyFrom: 'idParent',
+      keyTo: 'idSynonym',
+    }
+  })
+  subsynonymsNomenclatoric: ListOfSpecies[];
 
   constructor(data?: Partial<ListOfSpecies>) {
     super(data);

@@ -1,7 +1,8 @@
 import {Getter, inject} from '@loopback/core';
-import {BelongsToAccessor, DefaultCrudRepository, HasManyRepositoryFactory} from '@loopback/repository';
+import {BelongsToAccessor, DefaultCrudRepository, HasManyRepositoryFactory, HasManyThroughRepositoryFactory, repository} from '@loopback/repository';
 import {CardamineDataSource} from '../datasources';
-import {ListOfSpecies, ListOfSpeciesRelations} from '../models';
+import {ListOfSpecies, ListOfSpeciesRelations, Synonyms} from '../models';
+import {SynonymsOfSynonymsRepository, SynonymsRepository} from './synonyms.repository';
 
 export class ListOfSpeciesRepository extends DefaultCrudRepository<
   ListOfSpecies,
@@ -23,8 +24,11 @@ export class ListOfSpeciesRepository extends DefaultCrudRepository<
 
   public readonly nomenNovumFor: HasManyRepositoryFactory<ListOfSpecies, typeof ListOfSpecies.prototype.id>;
 
+  public readonly synonyms: HasManyRepositoryFactory<Synonyms, typeof ListOfSpecies.prototype.id>;
+
   constructor(
     @inject('datasources.cardamine') dataSource: CardamineDataSource,
+    @repository.getter('SynonymsRepository') protected synonymsRepositoryGetter: Getter<SynonymsRepository>,
   ) {
     super(ListOfSpecies, dataSource);
     this.accepted = this.createBelongsToAccessorFor('accepted', Getter.fromValue(this));
@@ -42,5 +46,32 @@ export class ListOfSpeciesRepository extends DefaultCrudRepository<
     this.registerInclusionResolver('replacedFor', this.replacedFor.inclusionResolver);
     this.nomenNovumFor = this.createHasManyRepositoryFactoryFor('nomenNovumFor', Getter.fromValue(this));
     this.registerInclusionResolver('nomenNovumFor', this.nomenNovumFor.inclusionResolver);
+
+    this.synonyms = this.createHasManyRepositoryFactoryFor('synonyms', synonymsRepositoryGetter,);
+    this.registerInclusionResolver('synonyms', this.synonyms.inclusionResolver);
+  }
+}
+
+// used in synonyms repository relation to avoid circular dependency
+export class ListOfSpeciesAsSynonymRepository extends DefaultCrudRepository<
+  ListOfSpecies,
+  typeof ListOfSpecies.prototype.id,
+  ListOfSpeciesRelations
+> {
+
+  public readonly subsynonymsNomenclatoric: HasManyThroughRepositoryFactory<ListOfSpecies, typeof ListOfSpecies.prototype.id,
+    Synonyms,
+    typeof ListOfSpecies.prototype.id
+  >;
+
+  constructor(
+    @inject('datasources.cardamine') dataSource: CardamineDataSource,
+    @repository.getter('SynonymsOfSynonymsRepository') protected synonymsOfSynonymsRepositoryGetter: Getter<SynonymsOfSynonymsRepository>,
+  ) {
+    super(ListOfSpecies, dataSource);
+
+    this.subsynonymsNomenclatoric = this.createHasManyThroughRepositoryFactoryFor(
+      'subsynonymsNomenclatoric', Getter.fromValue(this), synonymsOfSynonymsRepositoryGetter);
+    this.registerInclusionResolver('subsynonymsNomenclatoric', this.subsynonymsNomenclatoric.inclusionResolver);
   }
 }

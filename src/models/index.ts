@@ -8,6 +8,7 @@ export * from './literature.model';
 export * from './material.model';
 export * from './persons.model';
 export * from './reference.model';
+export * from './synonyms.model';
 export * from './world-l1.model';
 export * from './world-l2.model';
 export * from './world-l3.model';
