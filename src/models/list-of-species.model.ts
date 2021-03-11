@@ -39,24 +39,28 @@ export class ListOfSpecies extends Entity {
 
   @property({
     type: 'string',
+    infraspecific: true,
     defaultOrder: 3,
   })
   subsp?: string;
 
   @property({
     type: 'string',
+    infraspecific: true,
     defaultOrder: 4,
   })
   var?: string;
 
   @property({
     type: 'string',
+    infraspecific: true,
     defaultOrder: 5,
   })
   subvar?: string;
 
   @property({
     type: 'string',
+    infraspecific: true,
     defaultOrder: 6,
   })
   forma?: string;
@@ -84,6 +88,7 @@ export class ListOfSpecies extends Entity {
   @property({
     type: 'string',
     name: 'subsp_h',
+    infraspecific: true,
     defaultOrder: 10,
   })
   subspH?: string;
@@ -91,6 +96,7 @@ export class ListOfSpecies extends Entity {
   @property({
     type: 'string',
     name: 'var_h',
+    infraspecific: true,
     defaultOrder: 11,
   })
   varH?: string;
@@ -98,6 +104,7 @@ export class ListOfSpecies extends Entity {
   @property({
     type: 'string',
     name: 'subvar_h',
+    infraspecific: true,
     defaultOrder: 12,
   })
   subvarH?: string;
@@ -105,6 +112,7 @@ export class ListOfSpecies extends Entity {
   @property({
     type: 'string',
     name: 'forma_h',
+    infraspecific: true,
     defaultOrder: 13,
   })
   formaH?: string;

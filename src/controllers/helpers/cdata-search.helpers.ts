@@ -1,7 +1,7 @@
 import groupby from 'lodash.groupby';
 import {CdataSearch} from '../../models';
 import {CdataSearchGroupedResponse} from '../domain/cdata-search.domain';
-
+import {like} from './common.helper';
 
 const cdataSearchProperties = CdataSearch.definition.properties;
 
@@ -42,14 +42,6 @@ const groupingKey = (item: CdataSearch): string => {
     .map((val) => val ? val.trim() : '');
   return cleaned.join('|');
 };
-
-export function like(key: string, val: string): object {
-  return {
-    [key]: {
-      like: `%${val}%`,
-    },
-  };
-}
 
 export function worldsWhere(
   worldL1?: string, worldL2?: string, worldL3?: string, worldL4?: string,

@@ -23,3 +23,8 @@ const getSearchDefaultOrder = (properties: Property) => {
 export function getListOfSpeciesDefaultOrder() {
   return getSearchDefaultOrder(listOfSpeciesProperties);
 }
+
+export function getInfraspecificFields() {
+  return Object.keys(listOfSpeciesProperties)
+    .filter((key) => listOfSpeciesProperties[key].infraspecific);
+}
